@@ -1,0 +1,10 @@
+# $File: //ASP/opa/mct/iocs/MCTMSCIOC01/MCTMSCIOC01App/Db/vbm_stripe_control.req $
+# $Revision: #1 $
+# $DateTime: 2021/08/05 18:41:55 $
+# Last checked in by: $Author: pozara $
+#
+
+MCTVBM01:RH_STRIPE_POSITION_SP
+MCTVBM01:PT_STRIPE_POSITION_SP
+
+# end

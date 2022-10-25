@@ -1,0 +1,105 @@
+# $File: //ASP/opa/mct/iocs/MCTMSCIOC01/MCTMSCIOC01App/Db/pds_filter.template $
+# $Revision: #1 $
+# $DateTime: 2021/09/09 17:34:07 $
+# Last checked in by: $Author: pozara $
+#
+# Description:
+# Database for the PDS filters
+#
+# Formal template parameters:
+#
+# Copyright (c) 2021  Australian Synchrotron
+#
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Contact details:
+# andrazp@ansto.gov.au
+# 800 Blackburn Road, Clayton, Victoria 3168, Australia.
+#
+
+record (mbbo, "$(PADDLE):FILTER_SELECTION_CMD") {
+   field (DESC, "$(PADDLE) filter selection")
+   field (SCAN, "Passive")
+
+   field (SHFT, "0")
+   field (UNSV, "MAJOR")
+
+   # Conversions and alarm severities ZR(ST|SV|VL) ... FF(ST|SV|VL)
+   #
+   field (ZRST, "$(FILTER1)")
+   field (ZRSV, "NO_ALARM")
+   field (ZRVL, "0")
+
+   field (ONST, "$(FILTER2)")
+   field (ONSV, "NO_ALARM")
+   field (ONVL, "1")
+
+   field (TWST, "$(FILTER3)")
+   field (TWSV, "NO_ALARM")
+   field (TWVL, "2")
+
+   field (THST, "$(FILTER4)")
+   field (THSV, "NO_ALARM")
+   field (THVL, "3")
+
+   field (FLNK, "$(PADDLE):SET_PADDLE_POSITION")
+}
+
+record (seq, "$(PADDLE):SET_PADDLE_POSITION") {
+   field (DESC, "Set the filter position")
+   field (SCAN, "Passive")
+
+   field (SELM, "Specified")
+
+   field (SELL, "$(PADDLE):FILTER_SELECTION_CMD")
+
+   field (DO0,  "$(POS1)")  # Desired output value
+   field (LNK0, "$(PADDLE):PADDLE_POSITION_SP PP")  # Output link
+
+   field (DO1,  "$(POS2)")
+   field (LNK1, "$(PADDLE):PADDLE_POSITION_SP PP")
+
+   field (DO2,  "$(POS3)")
+   field (LNK2, "$(PADDLE):PADDLE_POSITION_SP PP")
+
+   field (DO3,  "$(POS4)")
+   field (LNK3, "$(PADDLE):PADDLE_POSITION_SP PP")
+}
+
+record (ao, "$(PADDLE):PADDLE_POSITION_SP") {
+   field (DESC, "Set the position to motor")
+   field (SCAN, "Passive")
+
+   field (ADEL, "0.1")
+   field (LOPR, "0.0")
+   field (HOPR, "100.0")
+
+   field (OUT,  "$(MOTOR) PP")
+   field (EGU,  "mm")
+   field (PREC, "1")
+}

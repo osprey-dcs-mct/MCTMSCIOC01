@@ -1,0 +1,157 @@
+# $File: //ASP/opa/mct/iocs/MCTMSCIOC01/MCTMSCIOC01App/Db/vbm_stripe_control.db $
+# $Revision: #1 $
+# $DateTime: 2021/08/05 18:41:55 $
+# Last checked in by: $Author: pozara $
+#
+# Description:
+# Database to support the movement of the VBM between the strips and 
+# calculates which stripe is actually in use.
+#
+# Copyright (c) 2021  Australian Synchrotron
+#
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Contact details:
+# andrazp@ansto.gov.au
+# 800 Blackburn Road, Clayton, Victoria 3168, Australia.
+#
+
+# TODO: Comment
+#
+record (ao, "MCTVBM01:RH_STRIPE_POSITION_SP") {
+   field (DESC, "Motor position for Rh stripe")
+   field (SCAN, "Passive")
+
+   field (EGU,  "mm")
+   field (PREC, "3")
+
+   field (LOPR, "-25")
+   field (HOPR, "-15")
+}
+
+record (ao, "MCTVBM01:PT_STRIPE_POSITION_SP") {
+   field (DESC, "Motor position for Pt stripe")
+   field (SCAN, "Passive")
+
+   field (EGU,  "mm")
+   field (PREC, "3")
+
+   field (LOPR, "15")
+   field (HOPR, "25")
+}
+
+record (bo, "MCTVBM01:STRIPE_SELECTION_CMD") {
+   field (DESC, "Select VBM stripe")
+   field (SCAN, "Passive")
+
+   field (ZNAM, "Rh")
+   field (ONAM, "Pt")
+
+   field (ZSV, "NO_ALARM")
+   field (OSV, "NO_ALARM")
+}
+
+record (calc, "MCTVBM01:SRIPE_TO_POSITION_CALC") {
+   field (DESC, "Stripe to position in mm")
+   field (SCAN, "Passive")
+
+   field (EGU,  "mm")
+   field (PREC,  "1")
+   field (HOPR,  "25")
+   field (LOPR,  "-25")
+
+   field (INPA, "MCTVBM01:STRIPE_SELECTION_CMD CP")
+   field (INPB, "MCTVBM01:RH_STRIPE_POSITION_SP")
+   field (INPC, "MCTVBM01:PT_STRIPE_POSITION_SP")
+   field (CALC, "A == 0 ? B : C")
+}
+
+# Request to move the motors to move to stripe
+#
+record (dfanout, "MCTVBM01:MOVE_TO_STRIPE") {
+
+   field (DESC, "Move to stripe")
+   field (SCAN, "Passive")
+
+   field (EGU,  "mm")
+   field (PREC,  "1")
+   field (HOPR,  "25")
+   field (LOPR,  "-25")
+
+   field (OMSL, "closed_loop")
+   field (DOL,  "MCTVBM01:SRIPE_TO_POSITION_CALC CP")
+   
+   field (SELM, "All")          
+
+   field (OUTA, "MCTVBM01MOT04 PP")
+   field (OUTB, "MCTVBM01MOT05 PP")
+}
+
+# Run a lua script function to calculate which stripe
+# is currently in use.
+#
+record (luascript, "MCTVBM01:CURRENT_STRIPE_CALC") {
+   field (DESC, "Calculate currently used stripe")
+   field (SCAN, ".5 second")
+
+   field (INPA, "MCTVBM01MOT04")
+   field (INPB, "MCTVBM01MOT05")
+   field (INPC, "MCTVBM01:RH_STRIPE_POSITION_SP")
+   field (INPD, "MCTVBM01:PT_STRIPE_POSITION_SP")
+
+   field (CODE, "@vbm_stripe_calc.lua currentStripe()")
+
+   field (OUT, "MCTVBM01:STRIPE_SELECTION_STATUS PP")
+}
+
+# Which VBM stripe are we currently on?
+#
+record (mbbi, "MCTVBM01:STRIPE_SELECTION_STATUS") {
+   field (DESC, "Which VBM stripe is in use")
+   field (SCAN, "Passive")
+   field (PINI, "YES")
+
+   field (SHFT, "0")
+   field (UNSV, "MAJOR")
+
+   # Conversions and alarm severities ZR(ST|SV|VL) ... FF(ST|SV|VL)
+   #
+   field (ZRST, "None")
+   field (ZRSV, "MINOR")
+   field (ZRVL, "0")
+
+   field (ONST, "Rh")
+   field (ONSV, "NO_ALARM")
+   field (ONVL, "1")
+
+   field (TWST, "Pt")
+   field (TWSV, "NO_ALARM")
+   field (TWVL, "2")
+}
+
+# end

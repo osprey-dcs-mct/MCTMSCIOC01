@@ -1,0 +1,50 @@
+# $File: //ASP/opa/mct/iocs/MCTMSCIOC01/MCTMSCIOC01App/Db/pds_filters.substitutions $
+# $Revision: #1 $
+# $DateTime: 2021/09/09 17:34:07 $
+# Last checked in by: $Author: pozara $
+#
+# Description:
+# Paddles with filters and their positions for MCT PDS
+#
+# Copyright (c) 2021  Australian Synchrotron
+#
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Contact details:
+# andrazp@ansto.gov.au
+# 800 Blackburn Road, Clayton, Victoria 3168, Australia.
+#
+
+file "db/pds_filter.template" {
+   pattern {PADDLE,     MOTOR,            FILTER1,          POS1, FILTER2,          POS2, FILTER3,          POS3, FILTER4, POS4  }
+           {"MCTFLT01", "MCTFLT01MOT01",  "Spare 1",        14.9, "Spare 2",        42.9, "0.2 mm Diamond", 70.9, "Empty", 93.0  }
+           {"MCTFLT02", "MCTFLT02MOT01",  "10 mm Graphite", 12.8, "5 mm Graphite",  40.8, "1 mm Graphite",  68.8, "Empty", 91.0  }
+           {"MCTFLT03", "MCTFLT03MOT01",  "5 mm Al",        11.0, "1 mm Al",        39.0, "0.1 mm Al",      67.0, "Empty", 90.0  }
+           {"MCTFLT04", "MCTFLT04MOT01",  "0.5 mm Cu",      10.9, "0.1 mm Cu",      38.9, "0.02 mm Cu",     66.9, "Empty", 89.0  }
+           {"MCTFLT05", "MCTFLT05MOT01",  "0.05 mm Sn",     15.5, "0.05 mm Pd",     43.5, "0.05 mm Zr",     71.5, "Empty", 94.0  }
+}
